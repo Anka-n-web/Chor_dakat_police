@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=2.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
   <title>Chor Dakat Police</title>
   <style>
     :root {
       --bg: #0a0a12;
-      --surface: rgba(18, 18, 32, 0.8);
-      --surface2: rgba(28, 28, 48, 0.7);
+      --surface: rgba(18,18,32,0.85);
+      --surface2: rgba(28,28,48,0.75);
       --gold: #d4a745;
       --gold2: #f0c860;
       --red: #e04050;
@@ -16,17 +16,9 @@
       --blue: #4a80d4;
       --blue2: #6ea0f4;
       --green: #3cb878;
-      --green2: #5cd898;
-      --purple: #8b5cf6;
       --text: #e8e8f0;
       --text2: #b0b0c0;
       --text3: #787898;
-      --radius: 16px;
-      --radius-sm: 10px;
-      --radius-xs: 8px;
-      --shadow: 0 8px 32px rgba(0,0,0,0.5);
-      --glass-border: 1px solid rgba(255,255,255,0.08);
-      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -37,586 +29,426 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow-x: hidden;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
       position: relative;
+      overflow-x: hidden;
     }
-    .bg-orbs {
-      position: fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;
-    }
-    .bg-orb {
-      position: absolute; border-radius:50%; filter:blur(100px); opacity:0.3;
-      animation: floatOrb 12s infinite ease-in-out;
-    }
-    .bg-orb:nth-child(1){ width:350px; height:350px; background:#6b3fa0; top:-5%; left:-10%; }
-    .bg-orb:nth-child(2){ width:280px; height:280px; background:#2a5090; bottom:-8%; right:-8%; animation-delay:-4s; }
-    .bg-orb:nth-child(3){ width:220px; height:220px; background:#8b3040; top:40%; left:50%; animation-delay:-8s; }
-    @keyframes floatOrb {
-      0%,100%{ transform:translate(0,0) scale(1); }
-      25%{ transform:translate(60px,-40px) scale(1.15); }
-      50%{ transform:translate(-30px,50px) scale(0.9); }
-      75%{ transform:translate(-50px,-30px) scale(1.1); }
-    }
-    .app-container {
-      position:relative; z-index:1; width:100%; max-width:520px; padding:16px;
-      min-height:100dvh; display:flex; align-items:center; justify-content:center;
-    }
+    .bg-orbs { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+    .bg-orb { position:absolute; border-radius:50%; filter:blur(90px); opacity:0.25; }
+    .bg-orb:nth-child(1){ width:300px; height:300px; background:#6b3fa0; top:-10%; left:-5%; animation:float1 14s infinite; }
+    .bg-orb:nth-child(2){ width:250px; height:250px; background:#2a5090; bottom:-5%; right:-5%; animation:float2 16s infinite; }
+    @keyframes float1{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(60px,-40px); } }
+    @keyframes float2{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(-50px,30px); } }
+    .app-container { z-index:1; width:100%; max-width:500px; padding:12px; display:flex; align-items:center; justify-content:center; }
     .app-card {
-      width:100%; background:var(--surface); backdrop-filter:blur(24px);
-      -webkit-backdrop-filter:blur(24px); border:var(--glass-border);
-      border-radius:24px; padding:24px 20px; box-shadow:var(--shadow);
-      transition:all var(--transition); position:relative; overflow:hidden;
+      width:100%; background:var(--surface); backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px); border-radius:24px; padding:20px 16px;
+      box-shadow:0 12px 40px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.08);
     }
-    .app-card::before {
-      content:''; position:absolute; top:0; left:0; right:0; height:1px;
-      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-    }
-    .screen { display:none; flex-direction:column; gap:18px; animation: fadeSlideIn 0.35s ease; }
+    .screen { display:none; flex-direction:column; gap:16px; animation: fadeSlide 0.3s ease; }
     .screen.active { display:flex; }
-    @keyframes fadeSlideIn { from{ opacity:0; transform:translateY(12px); } to{ opacity:1; transform:translateY(0); } }
-    @keyframes pulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.03); } }
-    @keyframes glow { 0%,100%{ box-shadow:0 0 20px rgba(212,167,69,0.3); } 50%{ box-shadow:0 0 40px rgba(212,167,69,0.7); } }
-    @keyframes confettiFall { 0%{ transform:translateY(-100vh) rotate(0deg); opacity:1; } 100%{ transform:translateY(105vh) rotate(720deg); opacity:0; } }
-    .title {
-      font-size:1.9rem; font-weight:800; text-align:center;
-      background:linear-gradient(135deg, var(--gold2), #e8c870, var(--gold));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    }
-    .subtitle { text-align:center; color:var(--text2); font-size:0.9rem; }
-    .section-label { font-size:0.75rem; text-transform:uppercase; letter-spacing:2px; color:var(--text3); text-align:center; font-weight:600; }
+    @keyframes fadeSlide { from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+    .title { font-size:1.8rem; font-weight:800; text-align:center; background:linear-gradient(135deg,var(--gold2),var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
     .btn {
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      padding:13px 22px; border-radius:30px; font-weight:700; font-size:1rem;
-      cursor:pointer; border:none; transition:all var(--transition); font-family:inherit;
+      display:inline-flex; align-items:center; justify-content:center; gap:6px;
+      padding:12px 20px; border-radius:30px; font-weight:700; border:none;
+      cursor:pointer; transition:0.2s; font-family:inherit; font-size:0.95rem;
     }
     .btn:active { transform:scale(0.96); }
-    .btn-primary { background:linear-gradient(135deg,#d4a745,#c49030); color:#1a1a10; box-shadow:0 4px 18px rgba(212,167,69,0.35); }
-    .btn-secondary { background:var(--surface2); color:var(--text); border:1px solid rgba(255,255,255,0.12); }
-    .btn-danger { background:linear-gradient(135deg,#e04050,#c03040); color:#fff; }
-    .btn-success { background:linear-gradient(135deg,#3cb878,#2a9a60); color:#fff; }
-    .btn-sm { padding:8px 14px; font-size:0.85rem; border-radius:22px; }
-    .btn-block { width:100%; display:flex; }
-    .btn:disabled { opacity:0.5; pointer-events:none; }
-    .input-group { display:flex; flex-direction:column; gap:4px; }
-    .input-label { font-size:0.8rem; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:1px; }
+    .btn-primary { background:linear-gradient(135deg,#d4a745,#c49030); color:#1a1a10; }
+    .btn-secondary { background:var(--surface2); color:var(--text); border:1px solid rgba(255,255,255,0.1); }
+    .btn-danger { background:#e04050; color:#fff; }
+    .btn-block { width:100%; }
+    .btn-sm { padding:8px 14px; font-size:0.8rem; }
+    .btn:disabled { opacity:0.4; pointer-events:none; }
     .input-field {
-      padding:12px 16px; border-radius:30px; border:1px solid rgba(255,255,255,0.15);
-      background:rgba(15,15,25,0.7); color:var(--text); font-size:1rem; outline:none;
-      font-family:inherit; transition:all var(--transition);
+      padding:11px 16px; border-radius:30px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.15);
+      color:var(--text); font-size:0.95rem; outline:none; width:100%;
     }
-    .input-field:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(212,167,69,0.12); }
-    .room-code-display {
-      display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.3);
-      border-radius:30px; padding:4px 4px 4px 18px; border:1px solid rgba(255,255,255,0.1);
-    }
-    .room-code-text { font-weight:700; font-size:1.3rem; letter-spacing:3px; color:var(--gold2); font-family:monospace; }
-    .btn-copy { padding:8px 16px; border-radius:24px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:var(--text); cursor:pointer; }
-    .player-list { display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto; }
+    .input-field:focus { border-color:var(--gold); }
+    .room-code { font-weight:700; font-size:1.2rem; letter-spacing:3px; color:var(--gold2); font-family:monospace; }
+    .player-list { display:flex; flex-direction:column; gap:6px; max-height:240px; overflow-y:auto; }
     .player-item {
-      display:flex; align-items:center; gap:10px; padding:10px 14px;
-      background:var(--surface2); border-radius:30px; border:1px solid rgba(255,255,255,0.05);
+      display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface2);
+      border-radius:30px; border:1px solid rgba(255,255,255,0.04);
     }
-    .player-avatar { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; flex-shrink:0; color:#fff; }
-    .badge { font-size:0.7rem; padding:4px 10px; border-radius:20px; font-weight:700; letter-spacing:1px; }
+    .avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:0.8rem; }
+    .badge { font-size:0.65rem; padding:3px 8px; border-radius:12px; font-weight:700; }
     .badge-host { background:rgba(212,167,69,0.2); color:var(--gold2); }
-    .badge-ready { background:rgba(60,184,120,0.2); color:var(--green2); }
-    .timer-circle {
-      width:110px; height:110px; border-radius:50%; border:5px solid rgba(255,255,255,0.1);
-      display:flex; align-items:center; justify-content:center; margin:0 auto;
-    }
-    .timer-circle.urgent { border-color:var(--red); animation:pulse 0.6s infinite; }
-    .timer-value { font-size:2.6rem; font-weight:800; }
-    .timer-value.urgent { color:var(--red2); }
-    .suspect-cards { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .suspect-card {
-      background:var(--surface2); border:2px solid rgba(255,255,255,0.08);
-      border-radius:var(--radius); padding:18px; text-align:center; cursor:pointer;
-    }
-    .suspect-card.selected-chor { border-color:var(--red); box-shadow:0 0 20px rgba(224,64,80,0.4); }
-    .suspect-card.selected-dakat { border-color:#e08030; box-shadow:0 0 20px rgba(224,128,48,0.4); }
-    .role-tag { display:inline-block; padding:5px 14px; border-radius:20px; font-weight:700; font-size:0.8rem; }
+    .timer-circle { width:100px; height:100px; border-radius:50%; border:5px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; margin:0 auto; }
+    .timer-circle.urgent { border-color:var(--red); animation:pulse 0.8s infinite; }
+    @keyframes pulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+    .suspect-cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .suspect-card { background:var(--surface2); border:2px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; text-align:center; cursor:pointer; }
+    .suspect-card.selected-chor { border-color:var(--red); box-shadow:0 0 16px rgba(224,64,80,0.5); }
+    .suspect-card.selected-dakat { border-color:#e08030; box-shadow:0 0 16px rgba(224,128,48,0.5); }
+    .role-tag { display:inline-block; padding:5px 12px; border-radius:15px; font-weight:700; font-size:0.75rem; }
     .role-tag-chor { background:rgba(224,64,80,0.25); color:var(--red2); }
     .role-tag-dakat { background:rgba(224,128,48,0.25); color:#f0a860; }
     .role-tag-unset { background:rgba(255,255,255,0.05); color:var(--text3); }
-    .modal-overlay {
-      position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px);
-      z-index:50; display:flex; align-items:center; justify-content:center;
+    .modal {
+      position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:100; display:flex; align-items:center; justify-content:center;
     }
-    .modal-card {
-      background:var(--surface); border:var(--glass-border); border-radius:20px;
-      padding:24px; max-width:360px; width:90%; text-align:center; display:flex; flex-direction:column; gap:14px;
-    }
-    .result-card { background:var(--surface2); border-radius:var(--radius); padding:16px; text-align:center; }
-    .result-card.correct { border:1px solid var(--green); box-shadow:0 0 20px rgba(60,184,120,0.3); }
-    .result-card.wrong { border:1px solid var(--red); box-shadow:0 0 20px rgba(224,64,80,0.3); }
-    .leaderboard-item {
-      display:flex; align-items:center; gap:8px; padding:10px 14px;
-      background:var(--surface2); border-radius:30px;
-    }
-    .leaderboard-rank { font-weight:800; width:28px; color:var(--gold2); }
-    .confetti-container { position:fixed; inset:0; pointer-events:none; z-index:200; overflow:hidden; }
-    .confetti-piece {
-      position:absolute; width:10px; height:16px; border-radius:3px;
-      animation:confettiFall 2.8s linear forwards;
-    }
-    .role-reveal-card {
-      background:var(--surface2); border-radius:var(--radius); padding:20px; text-align:center;
-      cursor:pointer; border:1px solid rgba(255,255,255,0.08); position:relative;
-    }
-    .role-reveal-card.hidden-role .role-content { filter:blur(10px); opacity:0.3; }
-    .chat-messages { background:rgba(0,0,0,0.2); border-radius:var(--radius-sm); padding:10px; min-height:70px; max-height:120px; overflow-y:auto; }
-    .chat-msg { padding:6px 10px; border-radius:14px; background:var(--surface2); max-width:80%; }
-    .msg-sender { font-weight:700; font-size:0.7rem; color:var(--gold2); }
-    .copied-toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:var(--green); padding:10px 20px; border-radius:30px; z-index:150; }
+    .modal-card { background:var(--surface); padding:20px; border-radius:20px; max-width:320px; width:90%; text-align:center; }
+    .chat-messages { background:rgba(0,0,0,0.2); border-radius:12px; padding:10px; min-height:60px; max-height:120px; overflow-y:auto; font-size:0.85rem; }
+    .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:var(--green); padding:8px 18px; border-radius:20px; z-index:200; }
   </style>
 </head>
 <body>
-<div class="bg-orbs"><div class="bg-orb"></div><div class="bg-orb"></div><div class="bg-orb"></div></div>
-<div class="confetti-container" id="confettiContainer"></div>
+<div class="bg-orbs"><div class="bg-orb"></div><div class="bg-orb"></div></div>
 <div id="toastContainer"></div>
 
 <div class="app-container">
-  <div class="app-card" id="appCard">
-    <!-- screens as before, no need to repeat; they will be built dynamically via JS to avoid duplication -->
-  </div>
+  <div class="app-card" id="appCard"></div>
 </div>
 
-<div class="modal-overlay" id="confirmModal" style="display:none;">
+<div class="modal" id="confirmModal" style="display:none">
   <div class="modal-card">
     <h3>Lock Guess?</h3>
-    <p id="confirmModalText"></p>
-    <div class="flex-center gap-2">
-      <button class="btn btn-sm btn-secondary" onclick="window.closeConfirmModal()">Cancel</button>
-      <button class="btn btn-sm btn-danger" onclick="window.lockGuess()">Confirm & Lock</button>
+    <p id="confirmText"></p>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+      <button class="btn btn-sm btn-secondary" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-sm btn-danger" onclick="lockGuess()">Confirm</button>
     </div>
   </div>
 </div>
 
 <script>
   (() => {
-    // ------------------- GLOBAL STATE & BROADCAST -------------------
-    const CHANNEL_NAME = 'chor-dakat-police';
-    const channel = new BroadcastChannel(CHANNEL_NAME);
-    const tabId = Math.random().toString(36).substr(2, 6);
+    // ---------- LOCAL STORAGE BASED MULTIPLAYER ----------
+    const STORAGE_KEY = 'chor_dakat_police_state';
+    const ACTION_KEY = 'chor_dakat_police_action';
+    const clientId = Math.random().toString(36).substr(2, 8);
     let isHost = false;
     let roomCode = '';
-    let players = [];           // {name, role, score, color, tabId?}
-    let myPlayerIndex = -1;     // index in players array
     let myName = '';
+    let myIndex = -1;
+
+    let players = [];
     let currentRound = 1;
     const totalRounds = 10;
     let phase = 'landing';
-    let policeIndex = -1, chorIndex = -1, dakatIndex = -1;
+    let policeIdx = -1, chorIdx = -1, dakatIdx = -1;
     let suspectIndices = [];
     let guessChor = -1, guessDakat = -1;
-    let discussionTimer = null, discussionSeconds = 60;
-    let roleRevealQueue = [], roleRevealCurrent = -1;
-    let chatMessages = [];
+    let discTimer = null, discSeconds = 60;
+    let roleQueue = [], roleCurrent = 0;
+    let chat = [];
     let roundScores = [];
 
-    const playerColors = ['#e04050','#4a80d4','#3cb878','#f0a860','#8b5cf6','#e86090','#40b8c0','#d4a745','#6ea0f4','#c080e0'];
+    const colors = ['#e04050','#4a80d4','#3cb878','#f0a860','#8b5cf6','#e86090','#40b8c0','#d4a745'];
     const vipRoles = [
       {name:'Babu',points:1000,icon:'👔'},{name:'Boro Babu',points:1200,icon:'🎩'},{name:'Mantri',points:1500,icon:'📜'},
-      {name:'Mukhyo Mantri',points:2000,icon:'🏛️'},{name:'Pradhan Mantri',points:3000,icon:'👑'},{name:'Rajdut',points:3500,icon:'🌍'},
-      {name:'Moharaj',points:4000,icon:'💎'},{name:'Somrat',points:4500,icon:'🔱'},{name:'Chakravarti',points:5000,icon:'☀️'}
+      {name:'Mukhyo Mantri',points:2000,icon:'🏛️'},{name:'Pradhan Mantri',points:3000,icon:'👑'}
     ];
 
-    // UI elements cache
-    const screens = {};
+    // ---------- UI HELPERS ----------
     function $(id) { return document.getElementById(id); }
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById('screen-'+id);
+      if (el) el.classList.add('active');
+    }
+    function toast(msg) {
+      const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
+      document.getElementById('toastContainer').appendChild(t);
+      setTimeout(()=>t.remove(),1500);
+    }
 
+    // ---------- STATE SYNC ----------
+    function saveState() {
+      if (!isHost) return;
+      const state = { roomCode, players, phase, currentRound, policeIdx, chorIdx, dakatIdx, suspectIndices, discSeconds, chat, roundScores, roleQueue, roleCurrent };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s.roomCode === roomCode) {
+          players = s.players; phase = s.phase; currentRound = s.currentRound;
+          policeIdx = s.policeIdx; chorIdx = s.chorIdx; dakatIdx = s.dakatIdx;
+          suspectIndices = s.suspectIndices; discSeconds = s.discSeconds; chat = s.chat;
+          roundScores = s.roundScores; roleQueue = s.roleQueue; roleCurrent = s.roleCurrent;
+          updateMyIndex();
+        }
+      }
+    }
+    function updateMyIndex() {
+      myIndex = players.findIndex(p => p.clientId === clientId);
+    }
+    function postAction(action) {
+      localStorage.setItem(ACTION_KEY, JSON.stringify({...action, clientId, timestamp: Date.now()}));
+      localStorage.removeItem(ACTION_KEY);
+    }
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY && !isHost) {
+        loadState();
+        refreshUI();
+      } else if (e.key === ACTION_KEY && isHost && e.newValue) {
+        try {
+          const act = JSON.parse(e.newValue);
+          if (act.roomCode !== roomCode) return;
+          handleAction(act);
+        } catch(e){}
+      }
+    });
+
+    function handleAction(act) {
+      if (act.type === 'join') {
+        if (players.some(p => p.name.toLowerCase() === act.name.toLowerCase())) return;
+        players.push({ name:act.name, role:null, score:0, color:colors[players.length%colors.length], clientId:act.clientId });
+        saveState();
+      } else if (act.type === 'chat') {
+        chat.push({sender:act.sender, text:act.text});
+        saveState();
+      }
+    }
+
+    // ---------- BUILD UI ----------
     function buildUI() {
       document.getElementById('appCard').innerHTML = `
         <div class="screen active" id="screen-landing">
           <div style="text-align:center"><span style="font-size:3rem">🕵️‍♂️</span></div>
           <h1 class="title">Chor Dakat Police</h1>
-          <p class="subtitle">Bengali social deduction · 10 rounds · 60s talk</p>
-          <button class="btn btn-primary btn-block" onclick="window.showCreateRoom()">🎯 Create Room</button>
-          <button class="btn btn-secondary btn-block" onclick="window.showJoinRoom()">🔗 Join Room</button>
+          <p class="subtitle" style="text-align:center;color:var(--text2)">Multi‑tab prototype</p>
+          <button class="btn btn-primary btn-block" onclick="createRoomScreen()">🎯 Create Room</button>
+          <button class="btn btn-secondary btn-block" onclick="joinRoomScreen()">🔗 Join Room</button>
         </div>
         <div class="screen" id="screen-create">
-          <button class="btn btn-sm btn-secondary" onclick="window.goToScreen('screen-landing')">← Back</button>
+          <button class="btn btn-sm btn-secondary" onclick="showScreen('landing')">← Back</button>
           <h2>Create Room</h2>
-          <div class="input-group"><label class="input-label">Your Name</label><input class="input-field" id="createName" placeholder="Name" maxlength="15"></div>
-          <button class="btn btn-primary btn-block" onclick="window.createRoom()">✨ Create</button>
-          <p id="createError" style="color:var(--red2);display:none;"></p>
+          <input class="input-field" id="createName" placeholder="Your name" maxlength="12">
+          <button class="btn btn-primary btn-block" onclick="createRoom()">✨ Create</button>
+          <p id="createErr" style="color:var(--red2);display:none"></p>
         </div>
         <div class="screen" id="screen-join">
-          <button class="btn btn-sm btn-secondary" onclick="window.goToScreen('screen-landing')">← Back</button>
+          <button class="btn btn-sm btn-secondary" onclick="showScreen('landing')">← Back</button>
           <h2>Join Room</h2>
-          <div class="input-group"><label class="input-label">Room Code</label><input class="input-field" id="joinCode" placeholder="ABCDE" maxlength="5" style="text-transform:uppercase;letter-spacing:2px;"></div>
-          <div class="input-group"><label class="input-label">Your Name</label><input class="input-field" id="joinName" placeholder="Name" maxlength="15"></div>
-          <button class="btn btn-primary btn-block" onclick="window.joinRoom()">🚪 Join</button>
-          <p id="joinError" style="color:var(--red2);display:none;"></p>
+          <input class="input-field" id="joinCode" placeholder="Room code" maxlength="5" style="text-transform:uppercase">
+          <input class="input-field" id="joinName" placeholder="Your name" maxlength="12">
+          <button class="btn btn-primary btn-block" onclick="joinRoom()">🚪 Join</button>
+          <p id="joinErr" style="color:var(--red2);display:none"></p>
         </div>
         <div class="screen" id="screen-lobby">
-          <div style="display:flex;justify-content:space-between"><h2>Lobby</h2><span class="badge badge-host" id="lobbyHostBadge">Host</span></div>
-          <div class="room-code-display"><span>Room:</span><span class="room-code-text" id="lobbyRoomCode"></span><button class="btn-copy" onclick="window.copyCode()">📋 Copy</button></div>
-          <div class="player-list" id="lobbyPlayerList"></div>
-          <p id="lobbyMinWarning" class="text-center" style="color:var(--text3);">Min 3 players</p>
-          <button class="btn btn-primary btn-block" id="btnStartGame" onclick="window.startGame()" disabled>🚀 Start Game</button>
-        </div>
-        <div class="screen" id="screen-roleReveal">
-          <p class="section-label">Role Reveal</p>
-          <p id="roleRevealPrompt">Tap card to reveal</p>
-          <div class="role-reveal-card hidden-role" id="roleRevealCard" onclick="window.revealRole()">
-            <div class="role-content"><span class="role-icon" id="roleIcon">🎭</span><span class="role-name" id="roleName">???</span></div>
+          <div style="display:flex;justify-content:space-between"><h2>Lobby</h2><span class="badge badge-host" id="hostBadge">Host</span></div>
+          <div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.3);border-radius:30px;padding:4px 16px">
+            <span>Room:</span><span class="room-code" id="lobbyCode"></span>
+            <button class="btn btn-sm btn-secondary" onclick="navigator.clipboard.writeText(roomCode);toast('Copied!')">📋</button>
           </div>
-          <p id="rolePlayerName" style="font-weight:600;color:var(--gold2);"></p>
-          <button class="btn btn-sm btn-secondary" id="btnNextReveal" onclick="window.nextReveal()" style="display:none;">✅ I've seen my role</button>
-          <button class="btn btn-primary btn-block" id="btnAllRevealed" onclick="window.startDiscussion()" style="display:none;">Begin Discussion</button>
+          <div class="player-list" id="playerList"></div>
+          <p id="minWarn" style="text-align:center;color:var(--text3)">Need 3 players</p>
+          <button class="btn btn-primary btn-block" id="startBtn" onclick="startGame()" disabled>🚀 Start Game</button>
         </div>
-        <div class="screen" id="screen-discussion">
+        <div class="screen" id="screen-role">
+          <p class="section-label">Role Reveal</p>
+          <p id="rolePrompt">Tap to reveal</p>
+          <div id="roleCard" class="role-reveal-card hidden-role" onclick="revealRole()">
+            <span class="role-icon" id="roleIcon">🎭</span>
+            <span class="role-name" id="roleName">???</span>
+          </div>
+          <p id="rolePlayer" style="font-weight:600;color:var(--gold2)"></p>
+          <button class="btn btn-sm btn-secondary" id="nextRoleBtn" onclick="nextRole()">✅ I've seen it</button>
+          <button class="btn btn-primary btn-block" id="allRolesBtn" onclick="startDiscussion()">Begin Discussion</button>
+        </div>
+        <div class="screen" id="screen-discuss">
           <p class="section-label">Round <span id="discRound">1</span> · Discussion</p>
           <div class="timer-circle" id="discTimer"><span class="timer-value" id="discTime">60</span></div>
-          <div class="chat-messages" id="chatMessages"></div>
-          <div style="display:flex;gap:6px"><input class="input-field" id="chatInput" placeholder="Message..." onkeydown="if(event.key==='Enter')window.sendChat()"><button class="btn btn-sm btn-secondary" onclick="window.sendChat()">Send</button></div>
+          <div class="chat-messages" id="chatBox"></div>
+          <div style="display:flex;gap:6px"><input class="input-field" id="chatInput" placeholder="Message..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn btn-sm btn-secondary" onclick="sendChat()">Send</button></div>
         </div>
-        <div class="screen" id="screen-policeGuess">
+        <div class="screen" id="screen-guess">
           <p class="section-label">Police ID</p>
-          <p style="color:var(--blue2);">Officer <span id="policeName"></span></p>
+          <p style="color:var(--blue2)">Officer <span id="policeName"></span></p>
           <div class="suspect-cards" id="suspectCards"></div>
-          <p id="guessStatus" style="color:var(--text3);">Select role for each</p>
-          <button class="btn btn-danger btn-block" id="btnConfirmGuess" onclick="window.confirmGuess()" disabled>🔒 Lock Guess</button>
+          <p id="guessStatus" style="color:var(--text3)"></p>
+          <button class="btn btn-danger btn-block" id="confirmGuessBtn" onclick="confirmGuess()" disabled>🔒 Lock Guess</button>
         </div>
         <div class="screen" id="screen-result">
           <p class="section-label">Round <span id="resRound">1</span> Results</p>
-          <div class="result-card" id="resultCard"><h3 id="resHeadline"></h3><p id="resDetail"></p></div>
+          <div class="result-card" id="resCard"><h3 id="resHead"></h3><p id="resDetail"></p></div>
           <div class="leaderboard" id="resLeaderboard"></div>
-          <button class="btn btn-primary btn-block" id="btnNextRound" onclick="window.nextRound()">▶️ Next</button>
+          <button class="btn btn-primary btn-block" id="nextRoundBtn" onclick="nextRound()">▶️ Next</button>
         </div>
-        <div class="screen" id="screen-gameOver">
+        <div class="screen" id="screen-over">
           <div style="text-align:center;font-size:3rem">🏆</div>
           <h1 class="title">Game Over!</h1>
           <p id="winnerText" class="subtitle"></p>
-          <div class="leaderboard" id="finalLeaderboard"></div>
-          <button class="btn btn-primary btn-block" onclick="window.playAgain()">🔄 Play Again</button>
-          <button class="btn btn-secondary btn-block" onclick="window.resetToLanding()">🏠 New Room</button>
+          <div class="leaderboard" id="finalBoard"></div>
+          <button class="btn btn-primary btn-block" onclick="playAgain()">🔄 Play Again</button>
+          <button class="btn btn-secondary btn-block" onclick="resetAll()">🏠 New Room</button>
         </div>
       `;
-      // cache screens
-      ['landing','create','join','lobby','roleReveal','discussion','policeGuess','result','gameOver'].forEach(id => screens[id] = $(`screen-${id}`));
+      // add styles for role-reveal-card
+      const style = document.createElement('style');
+      style.textContent = `
+        .role-reveal-card { background:var(--surface2); border-radius:16px; padding:20px; text-align:center; cursor:pointer; border:1px solid rgba(255,255,255,0.1); }
+        .role-reveal-card.hidden-role .role-icon, .role-reveal-card.hidden-role .role-name { filter:blur(8px); opacity:0.4; }
+        .role-icon { font-size:2.5rem; display:block; }
+        .role-name { font-weight:700; font-size:1.2rem; }
+        .result-card { background:var(--surface2); padding:16px; border-radius:16px; text-align:center; }
+        .result-card.correct { border:2px solid var(--green); }
+        .result-card.wrong { border:2px solid var(--red); }
+        .leaderboard-item { display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--surface2); border-radius:20px; margin-bottom:4px; }
+        .section-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:2px; color:var(--text3); text-align:center; }
+      `;
+      document.head.appendChild(style);
     }
 
-    function goToScreen(id) {
-      Object.values(screens).forEach(s => s?.classList.remove('active'));
-      screens[id]?.classList.add('active');
-      phase = id === 'landing' ? 'landing' : phase;
-    }
-
-    window.goToScreen = goToScreen;
-    window.showCreateRoom = () => { goToScreen('create'); $('createName').value = ''; $('createError').style.display='none'; };
-    window.showJoinRoom = () => { goToScreen('join'); $('joinCode').value=''; $('joinName').value=''; $('joinError').style.display='none'; };
-
-    function showToast(msg) {
-      const t = document.createElement('div'); t.className='copied-toast'; t.textContent=msg;
-      document.getElementById('toastContainer').appendChild(t);
-      setTimeout(()=>t.remove(),1500);
-    }
-
-    // ---------- BROADCAST HANDLING ----------
-    function broadcast(msg) { channel.postMessage({...msg, from: tabId}); }
-
-    channel.onmessage = (e) => {
-      const msg = e.data;
-      if (msg.from === tabId) return;
-      if (!isHost && msg.type === 'stateUpdate') {
-        // receive full state from host
-        if (msg.roomCode === roomCode) {
-          players = msg.players;
-          myPlayerIndex = players.findIndex(p => p.tabId === tabId);
-          renderLobby();
-        }
-      } else if (isHost) {
-        if (msg.type === 'joinRequest' && msg.roomCode === roomCode) {
-          const name = msg.name;
-          if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-            channel.postMessage({type:'joinError',to:msg.from,error:'Name taken'});
-            return;
-          }
-          const newPlayer = {name, role:null, score:0, color:playerColors[players.length%playerColors.length], tabId:msg.from};
-          players.push(newPlayer);
-          broadcastState();
-        }
-        else if (msg.type === 'chat' && msg.roomCode === roomCode) {
-          chatMessages.push({sender:msg.sender, text:msg.text});
-          broadcastState();
-        }
-        else if (msg.type === 'guess' && msg.roomCode === roomCode && phase==='policeGuess') {
-          // host receives guess from police tab (only police tab sends guess)
-        }
-      }
-      if (msg.type === 'startGame' && msg.roomCode === roomCode && !isHost) {
-        // host tells us to start
-        players = msg.players;
-        currentRound = 1;
-        policeIndex = msg.policeIndex; chorIndex = msg.chorIndex; dakatIndex = msg.dakatIndex;
-        suspectIndices = msg.suspectIndices;
-        roleRevealQueue = msg.roleRevealQueue;
-        roleRevealCurrent = 0;
-        phase = 'roleReveal';
-        goToScreen('roleReveal');
-        updateRoleRevealUI();
-      }
-      if (msg.type === 'roleRevealUpdate' && msg.roomCode === roomCode) {
-        roleRevealCurrent = msg.current;
-        updateRoleRevealUI();
-      }
-      if (msg.type === 'discussionStart' && msg.roomCode === roomCode) {
-        startDiscussionClient(msg.secondsLeft);
-      }
-      if (msg.type === 'policeGuessStart' && msg.roomCode === roomCode) {
-        phase = 'policeGuess';
-        suspectIndices = msg.suspectIndices;
-        renderPoliceGuess();
-        goToScreen('policeGuess');
-      }
-      if (msg.type === 'result' && msg.roomCode === roomCode) {
-        phase = 'result';
-        roundScores = msg.roundScores;
-        renderResult(msg.policeCorrect);
-        goToScreen('result');
-      }
-    };
-
-    function broadcastState() {
-      if (!isHost) return;
-      channel.postMessage({type:'stateUpdate', roomCode, players, from:tabId});
-    }
-
-    // ---------- ROOM LOGIC ----------
+    // ---------- SCREEN FUNCTIONS ----------
+    window.createRoomScreen = () => { showScreen('create'); $('createName').focus(); };
+    window.joinRoomScreen = () => { showScreen('join'); };
     window.createRoom = () => {
       const name = $('createName').value.trim();
-      if (!name || name.length<2) { $('createError').style.display='block'; $('createError').textContent='Enter valid name'; return; }
-      roomCode = Math.random().toString(36).substring(2,7).toUpperCase();
-      isHost = true;
-      myName = name;
-      players = [{name, role:null, score:0, color:playerColors[0], tabId}];
-      myPlayerIndex = 0;
-      currentRound = 1;
-      phase = 'lobby';
-      renderLobby();
-      goToScreen('lobby');
-      broadcastState();
+      if (!name || name.length<2) { $('createErr').style.display='block'; return; }
+      isHost = true; roomCode = Math.random().toString(36).substring(2,7).toUpperCase();
+      myName = name; players = [{name, role:null, score:0, color:colors[0], clientId}];
+      myIndex = 0; currentRound=1; phase='lobby';
+      saveState(); refreshLobby(); showScreen('lobby');
     };
-
     window.joinRoom = () => {
       const code = $('joinCode').value.trim().toUpperCase();
       const name = $('joinName').value.trim();
-      if (!code || !name || name.length<2) { $('joinError').style.display='block'; return; }
-      // broadcast join request
-      channel.postMessage({type:'joinRequest', roomCode:code, name, from:tabId});
-      // wait for state update
-      roomCode = code;
-      myName = name;
-      isHost = false;
-      // temporary local player list
-      players = [{name, role:null, score:0, color:playerColors[0], tabId}];
-      myPlayerIndex = 0;
-      goToScreen('lobby');
-      renderLobby();
+      if (!code || !name || name.length<2) { $('joinErr').style.display='block'; return; }
+      roomCode = code; myName = name; isHost = false;
+      // send join request via localStorage
+      postAction({type:'join', roomCode, name, clientId});
+      // initial load
+      loadState();
+      if (players.length===0) {
+        players = [{name:'Host?', role:null, score:0, color:colors[0], clientId:'dummy'}];
+      }
+      updateMyIndex();
+      refreshLobby(); showScreen('lobby');
     };
 
-    function renderLobby() {
-      $('lobbyRoomCode').textContent = roomCode;
-      $('lobbyHostBadge').style.display = isHost ? 'inline-block' : 'none';
-      const list = $('lobbyPlayerList');
+    function refreshLobby() {
+      $('lobbyCode').textContent = roomCode;
+      $('hostBadge').style.display = isHost ? 'inline-block' : 'none';
+      const list = $('playerList');
       list.innerHTML = players.map((p,i) => `
         <div class="player-item">
-          <div class="player-avatar" style="background:${p.color}">${p.name[0].toUpperCase()}</div>
-          <span class="player-name">${p.name}</span>
+          <div class="avatar" style="background:${p.color}">${p.name[0]}</div>
+          <span>${p.name}</span>
           ${i===0 ? '<span class="badge badge-host">Host</span>' : ''}
         </div>
       `).join('');
-      const btn = $('btnStartGame');
-      if (isHost && players.length>=3) { btn.disabled = false; $('lobbyMinWarning').style.display='none'; }
-      else { btn.disabled = true; $('lobbyMinWarning').style.display='block'; }
+      $('startBtn').disabled = !(isHost && players.length>=3);
+      $('minWarn').style.display = players.length>=3 ? 'none' : 'block';
     }
 
-    window.copyCode = () => { navigator.clipboard.writeText(roomCode).then(()=>showToast('Copied!')); };
-
-    // ---------- GAME START & ROLES (host only) ----------
+    // ---------- GAME FLOW (HOST) ----------
     window.startGame = () => {
       if (!isHost || players.length<3) return;
       assignRoles();
-      currentRound = 1;
-      roleRevealQueue = players.map((_,i)=>i);
-      shuffle(roleRevealQueue);
-      roleRevealCurrent = 0;
-      phase = 'roleReveal';
-      // notify all
-      channel.postMessage({type:'startGame', roomCode, players, policeIndex, chorIndex, dakatIndex, suspectIndices, roleRevealQueue, from:tabId});
-      goToScreen('roleReveal');
-      updateRoleRevealUI();
+      roleQueue = players.map((_,i)=>i); shuffle(roleQueue); roleCurrent=0;
+      currentRound=1; phase='roleReveal';
+      saveState(); goToRoleReveal();
     };
-
     function assignRoles() {
-      players.forEach(p=>{p.role=null;p.roleData=null;});
-      const idx = players.map((_,i)=>i);
-      shuffle(idx);
-      policeIndex = idx[0]; players[policeIndex].role='Police'; players[policeIndex].roleData={icon:'🕵️',name:'Police',points:800};
-      chorIndex = idx[1]; players[chorIndex].role='Chor'; players[chorIndex].roleData={icon:'🦹',name:'Chor',points:300};
-      dakatIndex = idx[2]; players[dakatIndex].role='Dakat'; players[dakatIndex].roleData={icon:'💀',name:'Dakat',points:500};
-      let vip=0;
+      players.forEach(p=>{p.role=null;});
+      const idx = players.map((_,i)=>i); shuffle(idx);
+      policeIdx = idx[0]; players[policeIdx].role='Police';
+      chorIdx = idx[1]; players[chorIdx].role='Chor';
+      dakatIdx = idx[2]; players[dakatIdx].role='Dakat';
       for (let i=3;i<idx.length;i++) {
-        const v = vipRoles[Math.min(vip,vipRoles.length-1)];
-        players[idx[i]].role = v.name; players[idx[i]].roleData = {icon:v.icon, name:v.name, points:v.points};
-        vip++;
+        const v = vipRoles[Math.min(i-3, vipRoles.length-1)];
+        players[idx[i]].role = v.name;
       }
-      suspectIndices = [chorIndex, dakatIndex]; shuffle(suspectIndices);
+      suspectIndices = [chorIdx, dakatIdx]; shuffle(suspectIndices);
     }
-    function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
-
-    // ---------- ROLE REVEAL ----------
-    function updateRoleRevealUI() {
-      if (roleRevealCurrent >= players.length) {
-        $('btnNextReveal').style.display='none';
-        $('btnAllRevealed').style.display='block';
-        $('roleRevealPrompt').textContent='All roles seen';
+    function goToRoleReveal() {
+      showScreen('role');
+      updateRoleUI();
+    }
+    function updateRoleUI() {
+      if (roleCurrent >= players.length) {
+        $('nextRoleBtn').style.display='none'; $('allRolesBtn').style.display='block';
         return;
       }
-      const playerIdx = roleRevealQueue[roleRevealCurrent];
-      const player = players[playerIdx];
-      $('rolePlayerName').textContent = `Player: ${player.name}`;
-      $('roleIcon').textContent = player.roleData?.icon || '🎭';
-      $('roleName').textContent = player.roleData?.name || '???';
-      $('roleRevealCard').classList.add('hidden-role');
-      $('btnNextReveal').style.display='none';
-      $('btnAllRevealed').style.display='none';
-      $('roleRevealPrompt').textContent = 'Tap to reveal';
+      const pi = roleQueue[roleCurrent];
+      const p = players[pi];
+      $('rolePlayer').textContent = `Player: ${p.name}`;
+      $('roleIcon').textContent = getRoleIcon(p.role);
+      $('roleName').textContent = p.role;
+      document.getElementById('roleCard').classList.add('hidden-role');
+      $('nextRoleBtn').style.display='none'; $('allRolesBtn').style.display='none';
     }
     window.revealRole = () => {
-      $('roleRevealCard').classList.remove('hidden-role');
-      $('btnNextReveal').style.display='inline-flex';
+      document.getElementById('roleCard').classList.remove('hidden-role');
+      $('nextRoleBtn').style.display='inline-flex';
     };
-    window.nextReveal = () => {
-      if (!isHost) return;
-      roleRevealCurrent++;
-      if (roleRevealCurrent >= players.length) {
-        $('btnNextReveal').style.display='none';
-        $('btnAllRevealed').style.display='block';
+    window.nextRole = () => {
+      roleCurrent++;
+      if (roleCurrent >= players.length) {
+        $('nextRoleBtn').style.display='none'; $('allRolesBtn').style.display='block';
+        saveState();
       } else {
-        updateRoleRevealUI();
-        broadcast({type:'roleRevealUpdate', roomCode, current:roleRevealCurrent});
+        updateRoleUI();
+        saveState();
       }
     };
     window.startDiscussion = () => {
       if (!isHost) return;
-      phase='discussion';
-      chatMessages=[];
-      discussionSeconds=60;
-      broadcast({type:'discussionStart', roomCode, secondsLeft:60});
-      startDiscussionClient(60);
+      phase='discussion'; discSeconds=60; chat=[];
+      saveState();
+      startDiscussionClient();
     };
-    function startDiscussionClient(sec) {
+    function startDiscussionClient() {
       phase='discussion';
-      discussionSeconds=sec;
+      showScreen('discuss');
       updateDiscussionUI();
-      goToScreen('discussion');
-      if (discussionTimer) clearInterval(discussionTimer);
-      discussionTimer = setInterval(()=>{
-        discussionSeconds--;
+      if (discTimer) clearInterval(discTimer);
+      discTimer = setInterval(()=>{
+        discSeconds--;
         updateDiscussionUI();
-        if (discussionSeconds<=0) {
-          clearInterval(discussionTimer);
+        if (discSeconds<=0) {
+          clearInterval(discTimer);
           if (isHost) transitionToGuess();
         }
       },1000);
     }
     function updateDiscussionUI() {
       $('discRound').textContent=currentRound;
-      $('discTime').textContent=discussionSeconds;
-      const circle=$('discTimer');
-      circle.classList.toggle('urgent', discussionSeconds<=10);
-      $('chatMessages').innerHTML=chatMessages.map(m=>`<div class="chat-msg"><span class="msg-sender">${m.sender}:</span> ${m.text}</div>`).join('');
+      $('discTime').textContent=discSeconds;
+      document.getElementById('discTimer').classList.toggle('urgent', discSeconds<=10);
+      $('chatBox').innerHTML = chat.map(m => `<div class="chat-msg"><strong>${m.sender}:</strong> ${m.text}</div>`).join('');
     }
     window.sendChat = () => {
-      const input=$('chatInput'); const text=input.value.trim(); if(!text) return;
-      const sender = myName;
+      const text = $('chatInput').value.trim(); if(!text) return;
       if (isHost) {
-        chatMessages.push({sender,text});
-        broadcastState();
+        chat.push({sender:myName, text});
+        saveState();
         updateDiscussionUI();
       } else {
-        broadcast({type:'chat', roomCode, sender, text});
+        postAction({type:'chat', roomCode, sender:myName, text});
       }
-      input.value='';
+      $('chatInput').value='';
     };
-
     function transitionToGuess() {
       phase='policeGuess';
-      suspectIndices = [chorIndex, dakatIndex]; shuffle(suspectIndices);
-      broadcast({type:'policeGuessStart', roomCode, suspectIndices});
-      renderPoliceGuess();
-      goToScreen('policeGuess');
+      suspectIndices = [chorIdx, dakatIdx]; shuffle(suspectIndices);
+      saveState();
+      renderGuess();
+      showScreen('guess');
     }
-    window.confirmGuess = () => { if(guessChor>=0 && guessDakat>=0) $('confirmModal').style.display='flex'; };
-    window.closeConfirmModal = () => $('confirmModal').style.display='none';
-    window.lockGuess = () => {
-      $('confirmModal').style.display='none';
-      const correct = (guessChor===chorIndex && guessDakat===dakatIndex);
-      calculateScores(correct);
-      if (isHost) broadcast({type:'result', roomCode, roundScores, policeCorrect:correct});
-      renderResult(correct);
-      goToScreen('result');
-    };
-    function calculateScores(correct) {
-      roundScores = players.map((p,i)=>{
-        let rs=0;
-        if (i===policeIndex) rs=correct?800:0;
-        else if (i===chorIndex) rs=correct?0:300;
-        else if (i===dakatIndex) rs=correct?0:500;
-        else rs=p.roleData?.points||0;
-        p.score += rs;
-        return {name:p.name, roundScore:rs, totalScore:p.score, role:p.role};
-      }).sort((a,b)=>b.totalScore-a.totalScore);
-    }
-    function renderResult(correct) {
-      $('resRound').textContent=currentRound;
-      $('resultCard').className = `result-card ${correct?'correct':'wrong'}`;
-      $('resHeadline').textContent = correct ? '🎯 Police Correct!' : '❌ Police Wrong!';
-      $('resDetail').textContent = correct ? 'Chor & Dakat get 0. Police +800' : 'Police 0, Chor +300, Dakat +500';
-      $('resLeaderboard').innerHTML = roundScores.map((s,i)=>`
-        <div class="leaderboard-item"><span class="leaderboard-rank">#${i+1}</span> ${s.name} (${s.role}) <span style="margin-left:auto">${s.totalScore} <small>+${s.roundScore}</small></span></div>
-      `).join('');
-      $('btnNextRound').textContent = currentRound>=totalRounds ? '🏆 Final Results' : '▶️ Next Round';
-    }
-    window.nextRound = () => {
-      if (currentRound>=totalRounds) { showGameOver(); return; }
-      currentRound++;
-      chatMessages=[]; guessChor=-1; guessDakat=-1;
-      suspectIndices=[chorIndex,dakatIndex]; shuffle(suspectIndices);
-      if (isHost) startDiscussionClient(60);
-    };
-    function showGameOver() {
-      const sorted = players.map(p=>({...p})).sort((a,b)=>b.score-a.score);
-      $('winnerText').textContent = `🏆 ${sorted[0].name} wins!`;
-      $('finalLeaderboard').innerHTML = sorted.map((p,i)=>`<div class="leaderboard-item"><span class="leaderboard-rank">#${i+1}</span> ${p.name} (${p.role}) <span style="margin-left:auto">${p.score}</span></div>`).join('');
-      goToScreen('gameOver');
-      spawnConfetti(60);
-    }
-    window.playAgain = () => { currentRound=1; players.forEach(p=>{p.score=0;p.role=null;}); assignRoles(); roleRevealQueue=players.map((_,i)=>i); shuffle(roleRevealQueue); roleRevealCurrent=0; goToScreen('roleReveal'); updateRoleRevealUI(); };
-    window.resetToLanding = () => { clearInterval(discussionTimer); isHost=false; roomCode=''; players=[]; goToScreen('landing'); };
-
-    function renderPoliceGuess() {
-      $('policeName').textContent = players[policeIndex]?.name;
+    function renderGuess() {
+      $('policeName').textContent = players[policeIdx]?.name;
       const a = players[suspectIndices[0]], b = players[suspectIndices[1]];
       $('suspectCards').innerHTML = `
-        <div class="suspect-card" id="cardA" onclick="window.selectRole('A','chor')">
-          <div class="suspect-name">${a.name}</div><div class="role-tag role-tag-unset" id="tagA">Select</div>
+        <div class="suspect-card" id="cardA" onclick="selectRole('A','chor')">
+          <div>${a.name}</div><div class="role-tag role-tag-unset" id="tagA">Select</div>
         </div>
-        <div class="suspect-card" id="cardB" onclick="window.selectRole('B','chor')">
-          <div class="suspect-name">${b.name}</div><div class="role-tag role-tag-unset" id="tagB">Select</div>
+        <div class="suspect-card" id="cardB" onclick="selectRole('B','chor')">
+          <div>${b.name}</div><div class="role-tag role-tag-unset" id="tagB">Select</div>
         </div>`;
-      guessChor=-1; guessDakat=-1; $('btnConfirmGuess').disabled=true;
+      guessChor=-1; guessDakat=-1; $('confirmGuessBtn').disabled=true;
     }
     window.selectRole = (card, role) => {
       const idx = card==='A'?0:1;
       if (role==='chor') { guessChor=suspectIndices[idx]; guessDakat=suspectIndices[1-idx]; }
       else { guessDakat=suspectIndices[idx]; guessChor=suspectIndices[1-idx]; }
       updateCardUI();
-      if (guessChor>=0 && guessDakat>=0) $('btnConfirmGuess').disabled=false;
+      if (guessChor>=0 && guessDakat>=0) $('confirmGuessBtn').disabled=false;
     };
     function updateCardUI() {
       ['A','B'].forEach((c,i)=>{
@@ -624,24 +456,122 @@
         card.classList.remove('selected-chor','selected-dakat');
         tag.classList.remove('role-tag-chor','role-tag-dakat','role-tag-unset');
         tag.textContent='Select'; tag.classList.add('role-tag-unset');
-        if (guessChor===suspectIndices[i]) { card.classList.add('selected-chor'); tag.classList.add('role-tag-chor'); tag.textContent='Chor 🦹'; }
-        if (guessDakat===suspectIndices[i]) { card.classList.add('selected-dakat'); tag.classList.add('role-tag-dakat'); tag.textContent='Dakat 💀'; }
+        if (guessChor===suspectIndices[i]) { card.classList.add('selected-chor'); tag.classList.add('role-tag-chor'); tag.textContent='Chor'; }
+        if (guessDakat===suspectIndices[i]) { card.classList.add('selected-dakat'); tag.classList.add('role-tag-dakat'); tag.textContent='Dakat'; }
       });
     }
-    function spawnConfetti(n) {
-      const c = $('confettiContainer'); c.innerHTML='';
-      for (let i=0;i<n;i++) {
-        const p=document.createElement('div'); p.className='confetti-piece';
-        p.style.left=Math.random()*100+'%'; p.style.backgroundColor=['#d4a745','#e04050','#4a80d4','#3cb878'][i%4];
-        p.style.animationDelay=Math.random()*1.5+'s'; c.appendChild(p);
-      }
+    window.confirmGuess = () => {
+      if (guessChor<0||guessDakat<0) return;
+      document.getElementById('confirmModal').style.display='flex';
+      $('confirmText').textContent = `Chor: ${players[guessChor].name}, Dakat: ${players[guessDakat].name}`;
+    };
+    window.closeConfirm = () => document.getElementById('confirmModal').style.display='none';
+    window.lockGuess = () => {
+      document.getElementById('confirmModal').style.display='none';
+      const correct = (guessChor===chorIdx && guessDakat===dakatIdx);
+      calcScores(correct);
+      phase='result';
+      saveState();
+      renderResult(correct);
+      showScreen('result');
+    };
+    function calcScores(correct) {
+      roundScores = players.map((p,i)=>{
+        let rs=0;
+        if (i===policeIdx) rs=correct?800:0;
+        else if (i===chorIdx) rs=correct?0:300;
+        else if (i===dakatIdx) rs=correct?0:500;
+        else rs = getRolePoints(p.role);
+        p.score += rs;
+        return {name:p.name, roundScore:rs, totalScore:p.score, role:p.role};
+      }).sort((a,b)=>b.totalScore-a.totalScore);
+    }
+    function renderResult(correct) {
+      $('resRound').textContent=currentRound;
+      const card = $('resCard'); card.className = `result-card ${correct?'correct':'wrong'}`;
+      $('resHead').textContent = correct ? '🎯 Police Correct!' : '❌ Police Wrong!';
+      $('resDetail').textContent = correct ? 'Police +800, Chor/Dakat 0' : 'Police 0, Chor +300, Dakat +500';
+      $('resLeaderboard').innerHTML = roundScores.map((s,i)=>`
+        <div class="leaderboard-item"><span>#${i+1}</span> ${s.name} (${s.role}) <span style="margin-left:auto">${s.totalScore} <small>+${s.roundScore}</small></span></div>
+      `).join('');
+      $('nextRoundBtn').textContent = currentRound>=totalRounds ? '🏆 Final' : '▶️ Next';
+    }
+    window.nextRound = () => {
+      if (currentRound>=totalRounds) { showGameOver(); return; }
+      currentRound++; guessChor=-1; guessDakat=-1; chat=[];
+      suspectIndices=[chorIdx,dakatIdx]; shuffle(suspectIndices);
+      if (isHost) { phase='discussion'; discSeconds=60; saveState(); startDiscussionClient(); }
+    };
+    function showGameOver() {
+      const sorted = [...players].sort((a,b)=>b.score-a.score);
+      $('winnerText').textContent = `🏆 ${sorted[0].name} wins with ${sorted[0].score} pts!`;
+      $('finalBoard').innerHTML = sorted.map((p,i)=>`<div class="leaderboard-item"><span>#${i+1}</span> ${p.name} (${p.role}) <span style="margin-left:auto">${p.score}</span></div>`).join('');
+      showScreen('over');
+      spawnConfetti();
+    }
+    window.playAgain = () => {
+      players.forEach(p=>{p.score=0;});
+      assignRoles(); currentRound=1; roleQueue=players.map((_,i)=>i); shuffle(roleQueue); roleCurrent=0;
+      phase='roleReveal'; saveState(); goToRoleReveal();
+    };
+    window.resetAll = () => {
+      clearInterval(discTimer); isHost=false; roomCode=''; players=[]; showScreen('landing');
+      localStorage.removeItem(STORAGE_KEY);
+    };
+
+    function refreshUI() {
+      if (phase==='lobby') refreshLobby();
+      else if (phase==='roleReveal') { showScreen('role'); updateRoleUI(); }
+      else if (phase==='discussion') startDiscussionClient();
+      else if (phase==='policeGuess') { renderGuess(); showScreen('guess'); }
+      else if (phase==='result') { renderResult(true); showScreen('result'); }
     }
 
-    // expose functions to window
-    Object.assign(window, {showCreateRoom,showJoinRoom,createRoom,joinRoom,copyRoomCode:window.copyCode,startGame,revealRole:window.revealRole,nextReveal:window.nextReveal,startDiscussion,confirmGuess:window.confirmGuess,closeConfirmModal:window.closeConfirmModal,lockGuess:window.lockGuess,nextRound:window.nextRound,playAgain:window.playAgain,resetToLanding:window.resetToLanding,selectSuspectRole:window.selectRole});
+    function getRoleIcon(role) {
+      if (role==='Police') return '🕵️'; if (role==='Chor') return '🦹'; if (role==='Dakat') return '💀';
+      const v = vipRoles.find(r=>r.name===role); return v?v.icon:'👤';
+    }
+    function getRolePoints(role) {
+      if (role==='Police') return 800; if (role==='Chor') return 300; if (role==='Dakat') return 500;
+      const v = vipRoles.find(r=>r.name===role); return v?v.points:0;
+    }
+    function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
+    function spawnConfetti() {
+      const c = document.createElement('div'); c.style.position='fixed'; c.style.inset=0; c.style.pointerEvents='none'; c.style.zIndex=300;
+      for (let i=0;i<50;i++) {
+        const p = document.createElement('div'); p.style.position='absolute'; p.style.width='8px'; p.style.height='14px'; p.style.background=['gold','red','blue','green'][i%4];
+        p.style.left=Math.random()*100+'%'; p.style.top='-20px'; p.style.animation='fall 2s linear forwards'; p.style.animationDelay=Math.random()*1.5+'s';
+        c.appendChild(p);
+      }
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(),3000);
+    }
+    const fallKeyframes = `@keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity:0; } }`;
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = fallKeyframes;
+    document.head.appendChild(styleSheet);
+
+    // expose to window
+    window.showScreen = showScreen;
+    window.createRoomScreen = window.createRoomScreen;
+    window.joinRoomScreen = window.joinRoomScreen;
+    window.createRoom = window.createRoom;
+    window.joinRoom = window.joinRoom;
+    window.startGame = window.startGame;
+    window.revealRole = window.revealRole;
+    window.nextRole = window.nextRole;
+    window.startDiscussion = window.startDiscussion;
+    window.sendChat = window.sendChat;
+    window.selectRole = window.selectRole;
+    window.confirmGuess = window.confirmGuess;
+    window.closeConfirm = window.closeConfirm;
+    window.lockGuess = window.lockGuess;
+    window.nextRound = window.nextRound;
+    window.playAgain = window.playAgain;
+    window.resetAll = window.resetAll;
+
     buildUI();
-    goToScreen('landing');
-    window.copyCode = () => { navigator.clipboard.writeText(roomCode).then(()=>showToast('Copied!')); };
+    showScreen('landing');
   })();
 </script>
 </body>
